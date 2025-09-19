@@ -50,7 +50,11 @@ const AuthPage = () => {
   };
 
   const handleSubmit = async () => {
-    if (!email || !password || (!isLogin && !name)) {
+    if (
+      !email ||
+      (!isLogin && !name) ||
+      (!isLogin && role !== "guest" && !password)
+    ) {
       showMessage("Please fill in all fields.", "error");
       return;
     }
@@ -59,16 +63,28 @@ const AuthPage = () => {
     try {
       if (isLogin) {
         const res = await dispatch(loginUser({ email, password })).unwrap();
-        setEmail('');
-        setPassword('');
+        setEmail("");
+        setPassword("");
         showMessage("Login successful", "success");
-        router.push("/dashboard");
+
+        // 🔹 Redirect based on role after login
+        if (res.role === "guest") {
+          router.push("/guest");
+        } else {
+          router.push("/dashboard");
+        }
       } else {
         const res = await dispatch(
           registerUser({ name, email, password, role })
         ).unwrap();
         showMessage("Registration successful", "success");
-        router.push("/dashboard");
+
+        // 🔹 Redirect based on selected role after signup
+        if (role === "guest") {
+          router.push("/guest");
+        } else {
+          router.push("/dashboard");
+        }
       }
     } catch (err: any) {
       console.error("Auth failed:", err);
@@ -81,7 +97,8 @@ const AuthPage = () => {
     }
   };
 
-  const isFormValid = email && password && (isLogin || name);
+  const isFormValid =
+    email && (isLogin || (name && (role === "guest" || password)));
 
   const textFieldStyle = {
     "& .MuiOutlinedInput-root": {
@@ -281,32 +298,35 @@ const AuthPage = () => {
               sx={textFieldStyle}
             />
 
-            <TextField
-              fullWidth
-              placeholder="Password"
-              margin="normal"
-              type={showPassword ? "text" : "password"}
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LockIcon fontSize="small" />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-              sx={textFieldStyle}
-            />
+            {/* Show password for login, or signup with non-guest */}
+            {(isLogin || (!isLogin && role !== "guest")) && (
+              <TextField
+                fullWidth
+                placeholder="Password"
+                margin="normal"
+                type={showPassword ? "text" : "password"}
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <LockIcon fontSize="small" />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword(!showPassword)}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  ),
+                }}
+                sx={textFieldStyle}
+              />
+            )}
 
             {isLogin && (
               <Box
@@ -343,40 +363,28 @@ const AuthPage = () => {
                 <Typography variant="body2" fontWeight="medium" gutterBottom>
                   Select Role
                 </Typography>
-                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-                  <FormControlLabel
-                    value="admin"
-                    control={
-                      <Radio
-                        checked={role === "admin"}
-                        onChange={(e) => setRole(e.target.value)}
-                        sx={checkStyle}
-                      />
-                    }
-                    label="Admin"
-                  />
-                  <FormControlLabel
-                    value="user"
-                    control={
-                      <Radio
-                        checked={role === "user"}
-                        onChange={(e) => setRole(e.target.value)}
-                        sx={checkStyle}
-                      />
-                    }
-                    label="User"
-                  />
-                  <FormControlLabel
-                    value="guest"
-                    control={
-                      <Radio
-                        checked={role === "guest"}
-                        onChange={(e) => setRole(e.target.value)}
-                        sx={checkStyle}
-                      />
-                    }
-                    label="Guest"
-                  />
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    gap: 2,
+                    flexWrap: "wrap",
+                  }}
+                >
+                  {["admin", "user", "guest"].map((r) => (
+                    <FormControlLabel
+                      key={r}
+                      value={r}
+                      control={
+                        <Radio
+                          checked={role === r}
+                          onChange={(e) => setRole(e.target.value)}
+                          sx={checkStyle}
+                        />
+                      }
+                      label={r.charAt(0).toUpperCase() + r.slice(1)}
+                    />
+                  ))}
                 </Box>
               </Box>
             )}
