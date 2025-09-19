@@ -1,6 +1,21 @@
 "use client";
 import { useState } from "react";
-import {Box,Typography,TextField,Button,InputAdornment,IconButton,Checkbox,FormControlLabel,Link,Radio,CircularProgress,Snackbar,Alert,Fade} from "@mui/material";
+import {
+  Box,
+  Typography,
+  TextField,
+  Button,
+  InputAdornment,
+  IconButton,
+  Checkbox,
+  FormControlLabel,
+  Link,
+  Radio,
+  CircularProgress,
+  Snackbar,
+  Alert,
+  Fade,
+} from "@mui/material";
 import { useRouter } from "next/navigation";
 import EmailIcon from "@mui/icons-material/Email";
 import LockIcon from "@mui/icons-material/Lock";
@@ -10,9 +25,12 @@ import GroupsOutlinedIcon from "@mui/icons-material/GroupsOutlined";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Image from "next/image";
+import { useAppDispatch } from "@/app/hooks/redux";
+import { loginUser, registerUser } from "@/app/store/auth/auth.thunk";
 
 const AuthPage = () => {
   const router = useRouter();
+  const dispatch = useAppDispatch();
   const [isLogin, setIsLogin] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -21,47 +39,34 @@ const AuthPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [snack, setSnack] = useState({open: false,message: "",severity: "success" as "success" | "error"});
+  const [snack, setSnack] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error",
+  });
 
   const showMessage = (message: string, severity: "success" | "error") => {
     setSnack({ open: true, message, severity });
   };
 
   const handleSubmit = async () => {
-    // validation
-    if (!email || (!isLogin && !name)) {
-      showMessage("Please fill in all required fields.", "error");
-      return;
-    }
-
-    if (isLogin && !password) {
-      showMessage("Password is required.", "error");
-      return;
-    }
-
-    // skip password requirement if role === guest
-    if (!isLogin && role !== "guest" && !password) {
-      showMessage("Password is required for Admin/User.", "error");
-      return;
-    }
-
-    // Guest signup
-    if (!isLogin && role === "guest") {
-      const guestData = { name, email, role };
-      localStorage.setItem("guestUser", JSON.stringify(guestData));
-      showMessage("Continuing as Guest", "success");
-      router.push("/guest");
+    if (!email || !password || (!isLogin && !name)) {
+      showMessage("Please fill in all fields.", "error");
       return;
     }
 
     setLoading(true);
     try {
       if (isLogin) {
-        // login
+        const res = await dispatch(loginUser({ email, password })).unwrap();
+        setEmail('');
+        setPassword('');
         showMessage("Login successful", "success");
         router.push("/dashboard");
       } else {
-        // register
+        const res = await dispatch(
+          registerUser({ name, email, password, role })
+        ).unwrap();
         showMessage("Registration successful", "success");
         router.push("/dashboard");
       }
@@ -75,6 +80,8 @@ const AuthPage = () => {
       setLoading(false);
     }
   };
+
+  const isFormValid = email && password && (isLogin || name);
 
   const textFieldStyle = {
     "& .MuiOutlinedInput-root": {
@@ -112,6 +119,8 @@ const AuthPage = () => {
           justifyContent: "center",
           position: "relative",
           borderRadius: "12px",
+          mt: 2,
+          ml: 1,
         }}
       >
         {/* Logo */}
@@ -206,13 +215,12 @@ const AuthPage = () => {
           alignItems: "center",
           justifyContent: "center",
           p: 6,
-          backgroundColor: "#fefefeff",
+          backgroundColor: "#fefefe",
         }}
       >
         <Fade in timeout={500}>
           <Box
             component="form"
-            autoComplete="off"
             onSubmit={(e) => {
               e.preventDefault();
               handleSubmit();
@@ -270,44 +278,35 @@ const AuthPage = () => {
                   </InputAdornment>
                 ),
               }}
-              autoComplete="off"
               sx={textFieldStyle}
             />
 
-            {/* Password field without Chrome popup */}
-            {(isLogin || role !== "guest") && (
-              <TextField
-                fullWidth
-                placeholder="Password"
-                margin="normal"
-                type="text"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon fontSize="small" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword(!showPassword)}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                autoComplete="new-password"
-                inputProps={{
-                  autoComplete: "off",
-                  form: { autoComplete: "off" },
-                }}
-                sx={textFieldStyle}
-              />
-            )}
+            <TextField
+              fullWidth
+              placeholder="Password"
+              margin="normal"
+              type={showPassword ? "text" : "password"}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <LockIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={textFieldStyle}
+            />
 
             {isLogin && (
               <Box
@@ -344,14 +343,7 @@ const AuthPage = () => {
                 <Typography variant="body2" fontWeight="medium" gutterBottom>
                   Select Role
                 </Typography>
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: 2,
-                    alignItems: "center",
-                    justifyContent: "space-evenly",
-                  }}
-                >
+                <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
                   <FormControlLabel
                     value="admin"
                     control={
@@ -395,9 +387,8 @@ const AuthPage = () => {
               fullWidth
               sx={{
                 mt: 3,
-                cursor: "pointer",
                 py: 1.2,
-                color: "#ffff",
+                color: "black",
                 fontWeight: 600,
                 fontSize: "1rem",
                 textTransform: "none",
@@ -405,7 +396,7 @@ const AuthPage = () => {
                 bgcolor: "#14ab78",
                 "&:hover": { bgcolor: "#14ab78" },
               }}
-              disabled={loading}
+              disabled={loading || !isFormValid}
             >
               {loading ? (
                 <CircularProgress size={22} color="inherit" />
