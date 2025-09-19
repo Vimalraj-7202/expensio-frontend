@@ -329,8 +329,12 @@ const AuthPage = () => {
                   }
                   label="Remember me"
                 />
-                <Link href="#" underline="hover" sx={{ fontSize: "0.9rem", color: "#14ab78" }}>
-                Forgot?
+                <Link
+                  href="#"
+                  underline="hover"
+                  sx={{ fontSize: "0.9rem", color: "#14ab78" }}
+                >
+                  Forgot?
                 </Link>
               </Box>
             )}
