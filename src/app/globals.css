@@ -18,3 +18,18 @@ html, body {
 * {
   box-sizing: border-box;
 }
+
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-cartesian-grid:focus,
+.recharts-area:focus,
+.recharts-line:focus {
+  outline: none !important;
+}
+.recharts-wrapper:focus,
+.recharts-surface:focus,
+.recharts-cartesian-grid:focus,
+.recharts-area:focus,
+.recharts-line:focus {
+  outline: none !important;
+}

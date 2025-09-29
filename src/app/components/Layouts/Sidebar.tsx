@@ -1,9 +1,18 @@
-"use client";
-import React from "react";
-import { Box, Typography } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import { Avatar, Box, Typography } from "@mui/material";
 import { useRouter, usePathname } from "next/navigation";
 import { useAppSelector } from "@/app/hooks/redux";
-import {SpaceDashboardOutlined,SettingsOutlined,LogoutOutlined,NotificationsActiveOutlined,AdfScannerOutlined,ReceiptLong,CreditCard,AdminPanelSettings} from "@mui/icons-material";
+import {
+  SpaceDashboardOutlined,
+  SettingsOutlined,
+  LogoutOutlined,
+  NotificationsActiveOutlined,
+  AdfScannerOutlined,
+  ReceiptLong,
+  CreditCard,
+  AdminPanelSettings,
+  AccountBalanceWalletOutlined,
+} from "@mui/icons-material";
 
 const iconSize = 24;
 const Sidebar = () => {
@@ -12,49 +21,23 @@ const Sidebar = () => {
   const pathname = usePathname();
   const normalizedRole = user?.role;
 
+  const [profileImage, setProfileImage] = useState<string | null>(null);
+
+  // Load profile image from localStorage
+  useEffect(() => {
+    const savedImage = localStorage.getItem("profileImage");
+    if (savedImage) setProfileImage(savedImage);
+  }, []);
+
   const menuItems = [
-    {
-      label: "Dashboard",
-      icon: <SpaceDashboardOutlined />,
-      path: "/dashboard",
-      roles: ["admin", "user"],
-    },
-    {
-      label: "Expense",
-      icon: <CreditCard />,
-      path: "/expense",
-      roles: ["admin", "user"],
-    },
-    {
-      label: "Receipts",
-      icon: <ReceiptLong />,
-      path: "/receipts",
-      roles: ["admin", "user"],
-    },
-    {
-      label: "Reports",
-      icon: <AdfScannerOutlined />,
-      path: "/reports",
-      roles: ["admin", "user"],
-    },
-    {
-      label: "Notifications",
-      icon: <NotificationsActiveOutlined />,
-      path: "/notifications",
-      roles: ["admin", "user"],
-    },
-    {
-      label: "Settings",
-      icon: <SettingsOutlined />,
-      path: "/settings",
-      roles: ["admin", "user"],
-    },
-    {
-      label: "Admin",
-      icon: <AdminPanelSettings />,
-      path: "/admin",
-      roles: ["admin"],
-    },
+    { label: "Dashboard", icon: <SpaceDashboardOutlined />, path: "/dashboard", roles: ["admin", "user"] },
+    { label: "Expense", icon: <CreditCard />, path: "/expense", roles: ["admin", "user"] },
+    { label: "Receipts", icon: <ReceiptLong />, path: "/receipts", roles: ["admin", "user"] },
+    { label: "Budgets", icon: <AccountBalanceWalletOutlined />, path: "/budgets", roles: ["user"] },
+    { label: "Reports", icon: <AdfScannerOutlined />, path: "/reports", roles: ["admin", "user"] },
+    { label: "Notifications", icon: <NotificationsActiveOutlined />, path: "/notifications", roles: ["admin", "user"] },
+    { label: "Settings", icon: <SettingsOutlined />, path: "/settings", roles: ["admin", "user"] },
+    { label: "Admin", icon: <AdminPanelSettings />, path: "/admin", roles: ["admin"] },
   ];
 
   const handleLogout = () => {
@@ -72,7 +55,7 @@ const Sidebar = () => {
         flexDirection: "column",
         justifyContent: "space-between",
         height: "100vh",
-        p: 1,
+        p:1,
         position: "fixed",
         left: 0,
         top: 0,
@@ -106,10 +89,7 @@ const Sidebar = () => {
                 }}
               >
                 {React.cloneElement(item.icon, {
-                  sx: {
-                    fontSize: iconSize,
-                    color: isActive ? "white" : "gray",
-                  },
+                  sx: { fontSize: iconSize, color: isActive ? "white" : "gray" },
                 })}
                 <Typography fontSize={15} fontWeight={500}>
                   {item.label}
@@ -117,6 +97,30 @@ const Sidebar = () => {
               </Box>
             );
           })}
+      </Box>
+
+      {/* User Info */}
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 0.5,
+          mt:1,
+          mb: 2,
+          mr:2
+        }}
+      >
+        <Avatar
+          sx={{ width:100, height:100, mb: 1}}
+          src={profileImage || undefined} 
+        />
+        <Typography fontWeight={600} fontSize={16}>
+          {user.name}
+        </Typography>
+        <Typography fontSize={13} color="gray">
+          {user.email}
+        </Typography>
       </Box>
 
       {/* Logout Button */}
@@ -131,10 +135,7 @@ const Sidebar = () => {
           cursor: "pointer",
           color: "gray",
           transition: "0.2s",
-          "&:hover": {
-            bgcolor: "#f0f0f0",
-            color: "black",
-          },
+          "&:hover": { bgcolor: "#f0f0f0", color: "black" },
         }}
       >
         <LogoutOutlined sx={{ fontSize: iconSize }} />

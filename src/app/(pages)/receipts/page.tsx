@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
+import Receipts from '@/app/components/receipts/index'
 
 const page = () => {
   return (
-    <div>receipts</div>
+    <>
+    <Receipts/>
+    </>
   )
 }
 

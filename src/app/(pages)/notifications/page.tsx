@@ -1,8 +1,11 @@
-import React from 'react'
+import React from 'react';
+import Notifications from '@/app/components/notifications/page'
 
 const page = () => {
   return (
-    <div>notifications</div>
+    <>
+    <Notifications/>
+    </>
   )
 }
 

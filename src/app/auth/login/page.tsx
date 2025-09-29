@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -27,8 +27,12 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import Image from "next/image";
 import { useAppDispatch } from "@/app/hooks/redux";
 import { loginUser, registerUser } from "@/app/store/auth/auth.thunk";
+import { useSelector } from "react-redux";
+import { RootState } from "@/app/store/store";
 
 const AuthPage = () => {
+    const auth = useSelector((state: RootState) => state.auth);
+
   const router = useRouter();
   const dispatch = useAppDispatch();
   const [isLogin, setIsLogin] = useState(true);
@@ -49,6 +53,16 @@ const AuthPage = () => {
     setSnack({ open: true, message, severity });
   };
 
+    useEffect(() => {
+    if (!auth.isAuthenticated){
+      setEmail("");
+      setPassword("");
+      setName("");
+      setRole("guest");
+      setRemember(false);
+    }
+  }, [auth.isAuthenticated]);
+
   const handleSubmit = async () => {
     if (
       !email ||
@@ -67,7 +81,7 @@ const AuthPage = () => {
         setPassword("");
         showMessage("Login successful", "success");
 
-        // 🔹 Redirect based on role after login
+        //Redirect based on role after login
         if (res.role === "guest") {
           router.push("/guest");
         } else {
@@ -79,7 +93,7 @@ const AuthPage = () => {
         ).unwrap();
         showMessage("Registration successful", "success");
 
-        // 🔹 Redirect based on selected role after signup
+        //Redirect based on selected role after signup
         if (role === "guest") {
           router.push("/guest");
         } else {
@@ -87,7 +101,7 @@ const AuthPage = () => {
         }
       }
     } catch (err: any) {
-      console.error("Auth failed:", err);
+      // console.error("Auth failed:", err);
       showMessage(
         isLogin ? "Login failed. Try again." : "Registration failed.",
         "error"
