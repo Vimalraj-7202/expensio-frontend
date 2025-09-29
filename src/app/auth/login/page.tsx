@@ -139,104 +139,89 @@ const AuthPage = () => {
         minHeight: "97vh",
       }}
     >
-      {/* LEFT SIDE */}
-      <Box
-        sx={{
-          flex: 1,
-          background: "linear-gradient(135deg, #95e9b5 0%, #f8f6f5 100%)",
-          p: 6,
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          position: "relative",
-          borderRadius: "12px",
-          mt: 2,
-          ml: 1,
-        }}
-      >
-        {/* Logo */}
-        <Box
-          sx={{
-            position: "absolute",
-            top: 24,
-            left: 32,
-            display: "flex",
-            alignItems: "center",
-            gap: "0px",
-          }}
-        >
-          <Box sx={{ width: 45, height: 45, position: "relative" }}>
-            <Image
-              src="/wallet.svg"
-              alt="Expensio Logo"
-              fill
-              style={{ objectFit: "contain" }}
-            />
-          </Box>
-          <Typography variant="h6" fontWeight="bold">
-            <span style={{ color: "black" }}>Expensio</span>
-          </Typography>
-        </Box>
 
-        {/* Text Section */}
-        <Box sx={{ maxWidth: 450, zIndex: 2 }}>
-          <Typography variant="h3" fontWeight="bolder" gutterBottom>
-            Track expenses with clarity. Empower admins with control.
-          </Typography>
-          <Typography variant="body1" color="text.secondary" paragraph>
-            Expensio is a modern expense tracker with a streamlined user
-            dashboard and powerful admin controls for categories, budgets, and
-            teams.
-          </Typography>
-          <ul
-            style={{
-              fontSize: "1.2rem",
-              listStyle: "none",
-              padding: 0,
-              margin: 0,
-            }}
-          >
-            <li
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <TrendingUpIcon sx={{ color: "#14ab78" }} />
-              Real-time insights
-            </li>
-            <li
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <GppGoodOutlinedIcon sx={{ color: "#14ab78" }} />
-              Role-based access
-            </li>
-            <li
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <GroupsOutlinedIcon sx={{ color: "#14ab78" }} />
-              Team Ready
-            </li>
-          </ul>
-        </Box>
+   {/* LEFT SIDE */}
+<Box
+  sx={{
+    flex: 1,
+    backgroundColor: "#14ab78", 
+    p: 6,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    position: "relative",
+    color: "white",
+    height:'100vh'
+  }}
+>
+  {/* Logo */}
+  <Box
+    sx={{
+      position: "absolute",
+      top: 24,
+      left: 32,
+      display: "flex",
+      alignItems: "center",
+      gap: "0px",
+    }}
+  >
+    <Box sx={{ width: 45, height: 45, position: "relative" }}>
+      <Image
+        src="/wallet1.svg"
+        alt="Expensio Logo"
+        fill
+        style={{ objectFit: "contain" }}
+      />
+    </Box>
+    <Typography variant="h6" fontWeight="bold">
+      <span style={{ color: "white" }}>Expensio</span>
+    </Typography>
+  </Box>
 
-        {/* SVG Image */}
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 100,
-            right: 30,
-            width: "500px",
-            height: "500px",
-            opacity: 0.9,
-          }}
-        >
-          <Image
-            src="/bg.svg"
-            alt="Teamwork illustration"
-            width={600}
-            height={600}
-            style={{ objectFit: "contain" }}
-          />
-        </Box>
-      </Box>
+  {/* Text Section */}
+  <Box sx={{ maxWidth: 450, zIndex: 2 }}>
+    <Typography
+      variant="h3"
+      fontWeight="bolder"
+      gutterBottom
+      sx={{ color: "white" }}
+    >
+      Track expenses with clarity. Empower admins with control.
+    </Typography>
+    <Typography
+      variant="body1"
+      paragraph
+      sx={{ color: "rgba(255,255,255,0.85)" }}
+    >
+      Expensio is a modern expense tracker with a streamlined user
+      dashboard and powerful admin controls for categories, budgets, and
+      teams.
+    </Typography>
+    <ul
+      style={{
+        fontSize: "1.2rem",
+        listStyle: "none",
+        padding: 0,
+        margin: 0,
+        color: "white",
+      }}
+    >
+      <li style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <TrendingUpIcon sx={{ color: "white" }} />
+        Real-time insights
+      </li>
+      <li style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <GppGoodOutlinedIcon sx={{ color: "white" }} />
+        Role-based access
+      </li>
+      <li style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <GroupsOutlinedIcon sx={{ color: "white" }} />
+        Team Ready
+      </li>
+    </ul>
+  </Box>
+</Box>
+
 
       {/* RIGHT SIDE */}
       <Box

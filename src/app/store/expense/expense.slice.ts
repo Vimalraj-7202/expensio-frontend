@@ -15,6 +15,8 @@ interface ExpenseState {
     merchants: string[];
     categories: string[];
   };
+  pageNo: number;       // current page
+  hasMore: boolean;     // for infinite scroll
 }
 
 const initialState: ExpenseState = {
@@ -26,12 +28,20 @@ const initialState: ExpenseState = {
     merchants: [],
     categories: [],
   },
+  pageNo: 0,
+  hasMore: true,
 };
 
 const expenseSlice = createSlice({
   name: "expense",
   initialState,
-  reducers: {},
+  reducers: {
+    resetExpenses(state) {
+      state.data = [];
+      state.pageNo = 0;
+      state.hasMore = true;
+    },
+  },
   extraReducers: (builder) => {
     // Create Expense
     builder
@@ -43,13 +53,9 @@ const expenseSlice = createSlice({
         createNewExpense.fulfilled,
         (state, action: PayloadAction<any>) => {
           state.loading = false;
-
-          // Append new expense to existing data
           if (action.payload?.data) {
-            state.data.push(action.payload.data);
+            state.data.unshift(action.payload.data); // new expense at top
           }
-
-          // Update dropdowns if returned
           if (action.payload?.dropdowns) {
             state.dropdowns.merchants =
               action.payload.dropdowns.merchants ?? state.dropdowns.merchants;
@@ -63,7 +69,7 @@ const expenseSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    // getAllExpense
+    // Get All Expenses (Infinite Scroll)
     builder
       .addCase(getAllExpense.pending, (state) => {
         state.loading = true;
@@ -71,7 +77,18 @@ const expenseSlice = createSlice({
       })
       .addCase(getAllExpense.fulfilled, (state, action: PayloadAction<any>) => {
         state.loading = false;
-        state.data = action.payload.data ?? [];
+
+        const expenses = action.payload.data ?? [];
+        const pageNo = action.payload.pageNo ?? state.pageNo;
+
+        if (pageNo === 0) {
+          state.data = expenses; // first page replaces data
+        } else {
+          state.data = [...state.data, ...expenses]; // append for next pages
+        }
+
+        state.pageNo = pageNo;
+        state.hasMore = pageNo + 1 < action.payload.totalPages;
         state.dropdowns = action.payload.dropdowns ?? state.dropdowns;
       })
       .addCase(getAllExpense.rejected, (state, action) => {
@@ -79,7 +96,7 @@ const expenseSlice = createSlice({
         state.error = action.payload as string;
       });
 
-    //getExpenseByID
+    // Get Expense By ID
     builder
       .addCase(getExpenseByID.pending, (state) => {
         state.loading = true;
@@ -101,4 +118,5 @@ const expenseSlice = createSlice({
   },
 });
 
+export const { resetExpenses } = expenseSlice.actions;
 export default expenseSlice.reducer;

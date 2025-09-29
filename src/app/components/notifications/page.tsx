@@ -3,6 +3,7 @@ import { Box, Button, Typography, Switch, FormControlLabel } from '@mui/material
 import React, { useState } from 'react';
 import DoneAllOutlinedIcon from '@mui/icons-material/DoneAllOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import CommonTitle from '@/app/common/CommonTitle';
 
 const notifications = {
   today: [
@@ -54,14 +55,8 @@ const Page = () => {
 
   return (
     <>
-  <Typography sx={{ fontSize: { xs: 12, sm: 14 ,lg:20}, fontWeight: 600 }}>
-  Notifications
-</Typography>
-
-<span style={{ color: 'gray', display: 'block', fontSize: '16px', marginBottom: 2 }}>
-  Stay on top of bills, budgets, and updates.
-</span>
-
+    <CommonTitle title='Notifications' subTitle='  Stay on top of bills, budgets, and updates.'/>
+  
       {/* Toggles */}
       <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, gap: 4, mb: 3 }}>
         <FormControlLabel

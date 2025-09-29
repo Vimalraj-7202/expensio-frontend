@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Typography, Switch } from "@mui/material";
 import { useRouter, usePathname } from "next/navigation";
 import { useAppSelector } from "@/app/hooks/redux";
 import {
@@ -12,15 +12,21 @@ import {
   CreditCard,
   AdminPanelSettings,
   AccountBalanceWalletOutlined,
+  LightModeOutlined,
+  NightlightOutlined,
 } from "@mui/icons-material";
+import { useTheme as useAppTheme } from "@/app/providers/ThemeProvider";
+import { useTheme as useMuiTheme } from "@mui/material/styles";
 
 const iconSize = 24;
+
 const Sidebar = () => {
+  const { darkMode, toggleTheme } = useAppTheme();
+  const muiTheme = useMuiTheme();
   const { user } = useAppSelector((state) => state.auth);
   const router = useRouter();
   const pathname = usePathname();
   const normalizedRole = user?.role;
-
   const [profileImage, setProfileImage] = useState<string | null>(null);
 
   // Load profile image from localStorage
@@ -28,6 +34,8 @@ const Sidebar = () => {
     const savedImage = localStorage.getItem("profileImage");
     if (savedImage) setProfileImage(savedImage);
   }, []);
+
+  if (!normalizedRole) return null;
 
   const menuItems = [
     { label: "Dashboard", icon: <SpaceDashboardOutlined />, path: "/dashboard", roles: ["admin", "user"] },
@@ -40,26 +48,23 @@ const Sidebar = () => {
     { label: "Admin", icon: <AdminPanelSettings />, path: "/admin", roles: ["admin"] },
   ];
 
-  const handleLogout = () => {
-    router.push("/auth/login");
-  };
-
-  if (!normalizedRole) return null;
+  const handleLogout = () => router.push("/auth/login");
 
   return (
     <Box
       sx={{
         width: 230,
-        backgroundColor: "#ffffff",
+        backgroundColor: muiTheme.palette.background.paper,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
         height: "100vh",
-        p:1,
+        p: 1,
         position: "fixed",
         left: 0,
         top: 0,
         boxShadow: "2px 0 6px rgba(0,0,0,0.05)",
+        color: muiTheme.palette.text.primary,
       }}
     >
       {/* Menu Items */}
@@ -79,17 +84,17 @@ const Sidebar = () => {
                   p: 1.2,
                   borderRadius: "8px",
                   cursor: "pointer",
-                  bgcolor: isActive ? "#14ab78" : "transparent",
-                  color: isActive ? "white" : "gray",
+                  bgcolor: isActive ? muiTheme.palette.primary.main : "transparent",
+                  color: isActive ? muiTheme.palette.primary.contrastText : muiTheme.palette.text.primary,
                   transition: "0.2s",
                   "&:hover": {
-                    bgcolor: isActive ? "#14ab78" : "#f0f0f0",
-                    color: isActive ? "white" : "black",
+                    bgcolor: isActive ? muiTheme.palette.primary.main : muiTheme.palette.action.hover,
+                    color: isActive ? muiTheme.palette.primary.contrastText : muiTheme.palette.text.primary,
                   },
                 }}
               >
                 {React.cloneElement(item.icon, {
-                  sx: { fontSize: iconSize, color: isActive ? "white" : "gray" },
+                  sx: { fontSize: iconSize, color: isActive ? "white" : muiTheme.palette.text.secondary },
                 })}
                 <Typography fontSize={15} fontWeight={500}>
                   {item.label}
@@ -106,21 +111,36 @@ const Sidebar = () => {
           flexDirection: "column",
           alignItems: "center",
           gap: 0.5,
-          mt:1,
+          mt: 1,
           mb: 2,
-          mr:2
+          mr: 2,
         }}
       >
-        <Avatar
-          sx={{ width:100, height:100, mb: 1}}
-          src={profileImage || undefined} 
-        />
+        <Avatar sx={{ width: 100, height: 100, mb: 1 }} src={profileImage || undefined} />
         <Typography fontWeight={600} fontSize={16}>
           {user.name}
         </Typography>
-        <Typography fontSize={13} color="gray">
+        <Typography fontSize={13} color={muiTheme.palette.text.secondary}>
           {user.email}
         </Typography>
+      </Box>
+
+      {/* Theme Toggle */}
+      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mb: 1, gap: 1 }}>
+        <LightModeOutlined />
+        <Switch
+          checked={darkMode}
+          onChange={toggleTheme}
+          sx={{
+            "& .MuiSwitch-switchBase.Mui-checked": {
+              color: "#14ab78",
+              "&:hover": { backgroundColor: "rgba(20,171,120,0.08)" },
+            },
+            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": { backgroundColor: "#14ab78" },
+            "& .MuiSwitch-track": { backgroundColor: "#ccc" },
+          }}
+        />
+        <NightlightOutlined />
       </Box>
 
       {/* Logout Button */}
@@ -133,9 +153,9 @@ const Sidebar = () => {
           p: 1.2,
           borderRadius: "8px",
           cursor: "pointer",
-          color: "gray",
+          color: muiTheme.palette.text.primary,
           transition: "0.2s",
-          "&:hover": { bgcolor: "#f0f0f0", color: "black" },
+          "&:hover": { bgcolor: muiTheme.palette.action.hover },
         }}
       >
         <LogoutOutlined sx={{ fontSize: iconSize }} />

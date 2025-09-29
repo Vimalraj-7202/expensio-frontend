@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
 import Sidebar from "../components/Layouts/Sidebar";
-import {Box} from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { usePathname } from "next/navigation";
+import { useTheme as useMuiTheme } from "@mui/material/styles";
 
 const menuItems = [
   { label: "Dashboard", path: "/dashboard" },
@@ -11,15 +12,15 @@ const menuItems = [
   { label: "Reports", path: "/reports" },
   { label: "Notifications", path: "/notifications" },
   { label: "Settings", path: "/settings" },
-  {label:"Admin",path:"/admin"}
+  { label: "Admin", path: "/admin" },
 ];
+
 const Layout = ({ children }: any) => {
   const pathname = usePathname();
   const sidebarWidth = 230;
+  const muiTheme = useMuiTheme();
 
-  const currentPage = menuItems.find((item: any) =>
-    pathname.startsWith(item.path)
-  );
+  const currentPage = menuItems.find((item: any) => pathname.startsWith(item.path));
   const pageTitle = currentPage?.label || "";
 
   return (
@@ -29,7 +30,7 @@ const Layout = ({ children }: any) => {
         sx={{
           width: sidebarWidth,
           flexShrink: 0,
-          bgcolor: "grey.100",
+          bgcolor: muiTheme.palette.background.paper,
           height: "100vh",
           position: "fixed",
           left: 0,
@@ -43,19 +44,16 @@ const Layout = ({ children }: any) => {
       <Box
         sx={{
           flexGrow: 1,
-          marginLeft: "230px",
+          marginLeft: `${sidebarWidth}px`,
           height: "100vh",
           display: "flex",
           flexDirection: "column",
-          bgcolor: "#f2f1f5ff",
-          color: "black",
+          bgcolor: muiTheme.palette.background.default,
+          color: muiTheme.palette.text.primary, 
           overflow: "auto",
-          boxSizing: "border-box"
+          boxSizing: "border-box",
         }}
       >
-        <Box>
-          {/* <Typography sx={{ fontWeight: "bold" }}>{pageTitle}</Typography> */}
-        </Box>
         <Box sx={{ flexGrow: 1, p: 2, overflowY: "auto" }}>{children}</Box>
       </Box>
     </Box>

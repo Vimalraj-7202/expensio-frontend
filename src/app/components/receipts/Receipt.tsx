@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import BackupOutlinedIcon from "@mui/icons-material/BackupOutlined";
 import CloseIcon from "@mui/icons-material/Close";
+import CommonTitle from "@/app/common/CommonTitle";
 
 const Page = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -49,13 +50,7 @@ const Page = () => {
   return (
     <Box>
       {/* Title */}
-      <Typography sx={{ fontSize: "20px", fontWeight: 600 }}>
-        Receipts
-      </Typography>
-      <Typography sx={{ color: "gray", mb: 3 }}>
-        Upload and keep receipts alongside expenses.
-      </Typography>
-
+      <CommonTitle title="Receipts" subTitle="Upload and keep receipts alongside expenses."/>
       {/* Two sections side by side */}
       <Box
         sx={{
@@ -80,7 +75,7 @@ const Page = () => {
             textAlign: "center",
             cursor: "pointer",
             transition: "0.3s",
-            "&:hover": { borderColor: "#14ab78", backgroundColor: "#f9fdfa" },
+            // "&:hover": { borderColor: "#14ab78", backgroundColor: "#c5c8c6ff" },
           }}
         >
           <BackupOutlinedIcon sx={{ color: "#14ab78", fontSize: 50, mb: 1 }} />

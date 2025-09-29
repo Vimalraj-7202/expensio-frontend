@@ -2,7 +2,6 @@
 import React from "react";
 import { Box, Typography, List, ListItem, ListItemText, Divider } from "@mui/material";
 
-// Dummy data - you can replace this with props or state
 const docs = [
   { name: "receipt1.pdf", time: "2025-09-23 10:30 AM" },
   { name: "invoice_food.pdf", time: "2025-09-23 11:15 AM" },
@@ -17,6 +16,7 @@ const ReceiptList = () => {
         borderRadius: "10px",
         p: 2,
         width: "100%",
+        mt:2
       }}
     >
       <Typography sx={{ fontSize: "18px", fontWeight: 600, mb: 2 }}>

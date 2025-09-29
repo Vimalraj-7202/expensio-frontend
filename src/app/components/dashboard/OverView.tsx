@@ -8,6 +8,7 @@ import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import AttachMoneyOutlinedIcon from "@mui/icons-material/AttachMoneyOutlined";
 import { getAllOverview } from "@/app/store/reports/report.thunk";
 import { useDispatch, useSelector } from "react-redux";
+import CommonTitle from "@/app/common/CommonTitle";
 
 const Page = () => {
   const dispatch = useDispatch();
@@ -39,7 +40,7 @@ const Page = () => {
   const cards = [
     {
       label: "Total in September",
-      value: loading || error ? 0 : data.data?.totalSpent || 0,
+      value: loading || error ? 0 : data.data?.totalSpent ||0,
       gradient: "linear-gradient(135deg, #e0f7fa 0%, #80deea 100%)",
       borderColor: "#3b8ca5",
       icon: <AttachMoneyOutlinedIcon sx={{ color: "#3b8ca5", fontSize: 22 }} />,
@@ -47,7 +48,7 @@ const Page = () => {
     },
     {
       label: "Average / Day",
-      value: loading || error ? 0 : data.data?.averagePerDay || 0,
+      value: loading || error ?0 : data.data?.averagePerDay || 0,
       gradient: "linear-gradient(135deg, #ede7f6 0%, #b39ddb 100%)",
       borderColor: "#5e35b1",
       icon: (
@@ -75,12 +76,10 @@ const Page = () => {
 
   return (
     <Box>
-      <Typography sx={{ fontWeight: "bold" }}>
-        Welcome Back, 🙌 {name}
-      </Typography>
-      <Typography sx={{ color: "gray" }}>
-        Overview of your spending and recent activity.
-      </Typography>
+     <CommonTitle
+        title={`Welcome Back, 🙌 ${name}`}
+        subTitle="Overview of your spending and recent activity."
+      />
 
       {/* overall detail using GRID */}
       <Box

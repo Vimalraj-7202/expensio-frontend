@@ -9,10 +9,10 @@ class ExpenseService{
     }
 
     //getall expense
-    async getAllExpense():Promise<any>{
-        const response=await apiGet(GETALL_EXPENSE)
-        return response.data
-    }
+async getAllExpense(pageNo: number = 0, pageSize: number = 10): Promise<any> {
+  const response = await apiGet(`${GETALL_EXPENSE}?pageNo=${pageNo}&pageSize=${pageSize}`);
+  return response.data;
+}
 
       // Get expense by ID
   async getExpenseById(id: string): Promise<any> {

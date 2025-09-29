@@ -15,18 +15,18 @@ export const createNewExpense=createAsyncThunk(
 )
 
 //getAllExpense
-export const getAllExpense=createAsyncThunk(
-    '/getallExpense',
-    async(_,{rejectWithValue})=>{
-        try{
-            const response=await expenseService.getAllExpense();
-            if(!response) throw new Error ('data not found');
-            return response;
-        }catch(error:any){
-            return rejectWithValue(error.message)
-        }
+export const getAllExpense = createAsyncThunk(
+  "/getAllExpense",
+  async ({ pageNo = 0, pageSize = 10 }: { pageNo?: number; pageSize?: number }, { rejectWithValue }) => {
+    try {
+      const response = await expenseService.getAllExpense(pageNo, pageSize);
+      if (!response) throw new Error("Data not found");
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.message);
     }
-)
+  }
+);
 
 //getExpenseByID
 export const getExpenseByID = createAsyncThunk(
