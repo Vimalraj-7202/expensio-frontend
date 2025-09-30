@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAppSelector, useAppDispatch } from '@/app/hooks/redux';
 import { setAuth } from '@/app/store/auth/auth.slice';
+import { Box, CircularProgress, Typography } from '@mui/material';
 
 export default function HomePage() {
   const router = useRouter();
@@ -20,14 +21,32 @@ export default function HomePage() {
       dispatch(setAuth({ user: JSON.parse(savedUser), token: savedToken }));
     }
 
-    if (savedToken || token) {
+    const finalToken = savedToken || token;
+    if (finalToken) {
       router.replace('/dashboard');
     } else {
       router.replace('/auth/login');
     }
-  }, [dispatch, router, token, user]);
+    }, []);
 
-  if (!mounted) return null; // ✅ Prevents hydration mismatch
+  if (!mounted) return null;
 
-  return null;
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '100vh',
+        bgcolor: 'background.default',
+        color: 'text.primary',
+      }}
+    >
+      <CircularProgress />
+      <Typography variant="h6" sx={{ mt: 2 }}>
+        Redirecting...
+      </Typography>
+    </Box>
+  );
 }
