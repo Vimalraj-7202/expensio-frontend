@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import CommonDialog from "@/app/common/CommonDialog";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
 import {
   createCategory,
   updateCategory,
@@ -29,6 +29,7 @@ interface FormData {
 
 const BudgetCategory: React.FC = () => {
   const dispatch = useDispatch();
+  const theme = useTheme();
   const { data, error, loading } = useSelector(
     (state: RootState) => state.category
   );
@@ -113,7 +114,7 @@ const BudgetCategory: React.FC = () => {
       sx={{
         mt: 3,
         width: "100%",
-        border: "2px solid #e2e8f0",
+        border: `2px solid ${theme.palette.divider}`,
         borderRadius: 3,
         p: 2,
         display: "flex",
@@ -122,32 +123,29 @@ const BudgetCategory: React.FC = () => {
         height: 400,
       }}
     >
+      {/* Header */}
       <Box>
         <Typography sx={{ fontSize: 18, fontWeight: 600 }}>
           Category Budgets
         </Typography>
-        <span style={{ color: "gray" }}>
+        <Typography sx={{ color: theme.palette.text.secondary }}>
           Categorize your budget list as you like.
-        </span>
+        </Typography>
       </Box>
 
+      {/* Add Button */}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <Button
           onClick={() => setIsAddDialogOpen(true)}
-          sx={{
-            color: "white",
-            backgroundColor: "#14ab78",
-            height: 40,
-            width: 120,
-            textTransform: "none",
-            borderRadius: 2,
-            fontSize: "18px",
-          }}
+          variant="contained"
+          color="primary"
+          sx={{ height: 40, width: 120, fontSize: "18px",borderRadius:2 }}
         >
           + Add
         </Button>
       </Box>
 
+      {/* Add Dialog */}
       <CommonDialog
         title="Add Budget"
         open={isAddDialogOpen}
@@ -174,6 +172,7 @@ const BudgetCategory: React.FC = () => {
         </Box>
       </CommonDialog>
 
+      {/* Edit Dialog */}
       <CommonDialog
         title="Edit Budget"
         open={isEditDialogOpen}
@@ -200,6 +199,7 @@ const BudgetCategory: React.FC = () => {
         </Box>
       </CommonDialog>
 
+      {/* Delete Dialog */}
       <CommonDialog
         title="Delete Budget"
         open={isDeleteDialogOpen}
@@ -213,10 +213,12 @@ const BudgetCategory: React.FC = () => {
       </CommonDialog>
 
       {loading && <Typography>Loading categories...</Typography>}
-      {error && <Typography color="red">{error}</Typography>}
+      {error && <Typography color="error">{error}</Typography>}
 
+      {/* Category Table */}
       {!loading && !error && (
         <Box sx={{ overflowY: "auto", flex: 1 }}>
+          {/* Table Header */}
           <Box
             sx={{
               display: "grid",
@@ -224,7 +226,7 @@ const BudgetCategory: React.FC = () => {
               gap: 1,
               fontWeight: 600,
               mb: 1,
-              color: "gray",
+              color: theme.palette.text.secondary,
             }}
           >
             <Typography>Category</Typography>
@@ -235,6 +237,7 @@ const BudgetCategory: React.FC = () => {
             <Typography>Actions</Typography>
           </Box>
 
+          {/* Table Rows */}
           {categories.map((cat) => (
             <Box
               key={cat.id}
@@ -257,7 +260,7 @@ const BudgetCategory: React.FC = () => {
                     height: 14,
                     width: "100%",
                     borderRadius: 12,
-                    backgroundColor: "#e5e7eb",
+                    backgroundColor: theme.palette.action.hover,
                     overflow: "hidden",
                   }}
                 >
@@ -266,7 +269,7 @@ const BudgetCategory: React.FC = () => {
                       height: "100%",
                       width: `${cat.utilization}%`,
                       backgroundColor:
-                        cat.utilization > 100 ? "red" : "#14ab78",
+                        cat.utilization > 100 ? theme.palette.error.main : theme.palette.primary.main,
                       transition: "width 0.4s ease",
                     }}
                   />
@@ -278,25 +281,17 @@ const BudgetCategory: React.FC = () => {
               <Box sx={{ display: "flex", gap: 1 }}>
                 <Button
                   onClick={() => handleEditOpen(cat)}
-                  sx={{
-                    color: "gray",
-                    border: "1px solid #64748b",
-                    textTransform: "none",
-                    height: 28,
-                    px: 1,
-                  }}
+                  variant="outlined"
+                  color="secondary"
+                  sx={{ height: 28, px: 1 }}
                 >
                   <EditOutlinedIcon fontSize="small" /> Edit
                 </Button>
                 <Button
                   onClick={() => handleDeleteOpen(cat)}
-                  sx={{
-                    color: "red",
-                    border: "1px solid #64748b",
-                    textTransform: "none",
-                    height: 28,
-                    px: 1,
-                  }}
+                  variant="outlined"
+                  color="error"
+                  sx={{ height: 28, px: 1 }}
                 >
                   <DeleteOutlinedIcon fontSize="small" /> Delete
                 </Button>

@@ -4,16 +4,11 @@ import { Box, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import type { RootState, AppDispatch } from "@/app/store/store";
 import { getCategoryTotal } from "@/app/store/categoryTotal/total.thunk";
-
-import {
-  BarChart,
-  Bar,
-  Tooltip,
-  ResponsiveContainer,
-  LabelList,
-} from "recharts";
+import { useTheme } from "@mui/material/styles";
+import {BarChart,Bar,Tooltip,ResponsiveContainer,LabelList} from "recharts";
 
 const CategoryChart = () => {
+  const theme=useTheme();
   const dispatch = useDispatch<AppDispatch>();
   const { data, loading, error } = useSelector((state: RootState) => state.total);
 
@@ -38,7 +33,7 @@ const CategoryChart = () => {
       const { category, total } = payload[0].payload;
       return (
         <Box sx={{ p: 1, bgcolor: "#fff", border: "1px solid #ccc", borderRadius: 1, boxShadow: 1 }}>
-          <Typography sx={{ fontSize: 12, fontWeight: 500 }}>
+          <Typography sx={{ fontSize: 12, fontWeight: 500 ,color:'black'}}>
             {`${category} - ${total}`}
           </Typography>
         </Box>
@@ -48,8 +43,8 @@ const CategoryChart = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", height: 300, mt:1, p: 2, borderRadius: 3, background: "#f9f9f9", overflow: "hidden" }}>
-      <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 1 }}>
+    <Box sx={{ width: "100%", height: 350, mt:1, p:2, borderRadius: 3,backgroundColor: theme.palette.background.paper, overflow: "hidden" }}>
+      <Typography sx={{ fontSize: 16, fontWeight: 600, mb: 1,color:theme.palette.text.primary }}>
         Category Totals
       </Typography>
 
@@ -71,7 +66,7 @@ const CategoryChart = () => {
               <LabelList
                 dataKey="category"
                 position="top"
-                style={{ fontSize: 12, fontWeight: 500 }}
+                style={{ fontSize: 12, fontWeight: 500}}
               />
             </Bar>
           </BarChart>

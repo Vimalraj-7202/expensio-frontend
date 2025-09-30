@@ -26,7 +26,7 @@ const Page = () => {
   const cardStyle = {
     borderRadius: "15px",
     height: "120px",
-    p: 2,
+    p: 1.5,
     position: "relative",
     overflow: "hidden",
     transition: "transform 0.3s ease",
@@ -130,7 +130,7 @@ const Page = () => {
                 {card.label}
               </Typography>
               <span
-                style={{ fontWeight: "bold", fontSize: "28px", color: "black" }}
+                style={{ fontWeight: "bold", fontSize: "25px", color: "black" }}
               >
                 {card.value}
               </span>

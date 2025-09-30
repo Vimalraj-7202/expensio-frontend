@@ -1,10 +1,11 @@
-"use client";
+'use client'
 import { RootState } from "@/app/store/store";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 
 const Index = () => {
+  const theme = useTheme();
   const data = useSelector((state: RootState) => state.auth.user);
   const [image, setImage] = useState<string | null>(null);
   const [name, setName] = useState("");
@@ -42,9 +43,9 @@ const Index = () => {
   const textFieldStyles = {
     "& .MuiOutlinedInput-root": {
       borderRadius: 2,
-      "&.Mui-focused fieldset": { borderColor: "#14ab78" },
+      "&.Mui-focused fieldset": { borderColor: theme.palette.primary.main },
     },
-    "& .MuiInputLabel-root.Mui-focused": { color: "#14ab78" },
+    "& .MuiInputLabel-root.Mui-focused": { color: theme.palette.primary.main },
   };
 
   return (
@@ -57,7 +58,7 @@ const Index = () => {
               width: { xs: 120, sm: 150 },
               height: { xs: 120, sm: 150 },
               borderRadius: "50%",
-              border: "2px dashed #ccc",
+              border: `2px dashed ${theme.palette.divider}`,
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -77,7 +78,7 @@ const Index = () => {
             ) : (
               <Typography
                 variant="caption"
-                color="textSecondary"
+                color="text.secondary"
                 sx={{ textAlign: "center", px: 1 }}
               >
                 Upload a Profile Picture
@@ -94,7 +95,7 @@ const Index = () => {
           <Typography
             variant="subtitle1"
             align="center"
-            sx={{ color: "gray", fontSize: { xs: 14, sm: 16 } }}
+            sx={{ color: theme.palette.text.secondary, fontSize: { xs: 14, sm: 16 } }}
           >
             Personal Info
           </Typography>
@@ -102,52 +103,31 @@ const Index = () => {
       </Box>
 
       {/* Two Fields in One Row */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          gap: 2,
-          mb: 3,
-        }}
-      >
-        <TextField
-          fullWidth
-          label="Name"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          sx={textFieldStyles}
-        />
-        <TextField
-          fullWidth
-          label="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          sx={textFieldStyles}
-        />
+      <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, mb: 3 }}>
+        <TextField fullWidth label="Name" value={name} onChange={(e) => setName(e.target.value)} sx={textFieldStyles} />
+        <TextField fullWidth label="Email" value={email} onChange={(e) => setEmail(e.target.value)} sx={textFieldStyles} />
       </Box>
 
       {/* Buttons */}
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: { xs: "column", sm: "row" },
-          gap: 2,
-          mb: 4,
-        }}
-      >
+      <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, mb: 4 }}>
         <Button
           variant="contained"
-          sx={{ backgroundColor: "#14ab78", textTransform: "none", width: { xs: "100%", sm: "auto" } }}
+          sx={{
+            backgroundColor: theme.palette.primary.main,
+            textTransform: "none",
+            width: { xs: "100%", sm: "auto" },
+            "&:hover": { backgroundColor: theme.palette.primary.dark },
+          }}
         >
           Save Changes
         </Button>
         <Button
           variant="outlined"
           sx={{
-            borderColor: "gray",
-            color: "gray",
+            borderColor: theme.palette.text.secondary,
+            color: theme.palette.text.secondary,
             textTransform: "none",
-            "&:hover": { borderColor: "gray" },
+            "&:hover": { borderColor: theme.palette.text.secondary },
             width: { xs: "100%", sm: "auto" },
           }}
         >
@@ -156,9 +136,9 @@ const Index = () => {
       </Box>
 
       {/* Security Section */}
-      <Box sx={{ border: "2px solid #e2e8f0", borderRadius: 2, p: 3 }}>
+      <Box sx={{ border: `2px solid ${theme.palette.divider}`, borderRadius: 2, p: 3 }}>
         <Typography sx={{ fontSize: { xs: 15, sm: 17 }, mb: 1 }}>Security</Typography>
-        <Typography variant="body2" color="gray" sx={{ mb: 2, fontSize: { xs: 12, sm: 14 } }}>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontSize: { xs: 12, sm: 14 } }}>
           Update your password to keep your account secure
         </Typography>
 
@@ -189,26 +169,25 @@ const Index = () => {
           sx={{ mb: 3, ...textFieldStyles }}
         />
 
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row" },
-            gap: 2,
-          }}
-        >
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2 }}>
           <Button
             variant="contained"
-            sx={{ backgroundColor: "#14ab78", textTransform: "none", width: { xs: "100%", sm: "auto" } }}
+            sx={{
+              backgroundColor: theme.palette.primary.main,
+              textTransform: "none",
+              width: { xs: "100%", sm: "auto" },
+              "&:hover": { backgroundColor: theme.palette.primary.dark },
+            }}
           >
             Update Password
           </Button>
           <Button
             variant="outlined"
             sx={{
-              borderColor: "gray",
-              color: "gray",
+              borderColor: theme.palette.text.secondary,
+              color: theme.palette.text.secondary,
               textTransform: "none",
-              "&:hover": { borderColor: "gray" },
+              "&:hover": { borderColor: theme.palette.text.secondary },
               width: { xs: "100%", sm: "auto" },
             }}
           >

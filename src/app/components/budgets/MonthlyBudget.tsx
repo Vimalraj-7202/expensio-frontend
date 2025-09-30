@@ -1,18 +1,43 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Box, Button, TextField, Typography, CircularProgress, Chip, MenuItem, Select, Table, TableBody, TableCell, TableHead, TableRow, Grid } from "@mui/material";
+import {
+  Box,
+  Button,
+  TextField,
+  Typography,
+  CircularProgress,
+  Chip,
+  MenuItem,
+  Select,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
+  Grid,
+  useTheme,
+} from "@mui/material";
 
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "@/app/store/store";
-import { createNewBudget, getAllBudget, updateBudget, deleteBudget } from "@/app/store/budget/budget.thunk";
+import {
+  createNewBudget,
+  getAllBudget,
+  updateBudget,
+  deleteBudget,
+} from "@/app/store/budget/budget.thunk";
 
-const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-const years = Array.from({ length:10 },(_, i) => new Date().getFullYear() + i);
+const months = [
+  "January","February","March","April","May","June",
+  "July","August","September","October","November","December"
+];
+const years = Array.from({ length: 10 }, (_, i) => new Date().getFullYear() + i);
 
 const MonthlyBudget = () => {
+  const theme = useTheme();
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state: RootState) => state.budget);
   const [formData, setFormData] = useState({ month: "", year: "", amount: "" });
@@ -20,7 +45,9 @@ const MonthlyBudget = () => {
   const currentMonth = months[new Date().getMonth()];
   const currentYear = new Date().getFullYear();
 
-  useEffect(() => { dispatch(getAllBudget() as any); }, [dispatch]);
+  useEffect(() => {
+    dispatch(getAllBudget() as any);
+  }, [dispatch]);
 
   useEffect(() => {
     if (data?.data?.length) {
@@ -28,7 +55,11 @@ const MonthlyBudget = () => {
         (b: any) => b.month === currentMonth && Number(b.year) === currentYear
       );
       if (currentBudget && !editBudgetId) {
-        setFormData({ month: currentBudget.month, year: currentBudget.year, amount: currentBudget.amount });
+        setFormData({
+          month: currentBudget.month,
+          year: currentBudget.year,
+          amount: currentBudget.amount,
+        });
       } else if (!currentBudget && !editBudgetId) {
         setFormData({ month: currentMonth, year: String(currentYear), amount: "" });
       }
@@ -39,7 +70,7 @@ const MonthlyBudget = () => {
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSave = async () => {
@@ -52,7 +83,9 @@ const MonthlyBudget = () => {
       }
       setFormData({ month: currentMonth, year: String(currentYear), amount: "" });
       dispatch(getAllBudget() as any);
-    } catch (err) { console.error("Failed to save budget:", err); }
+    } catch (err) {
+      console.error("Failed to save budget:", err);
+    }
   };
 
   const handleEdit = (budget: any) => {
@@ -61,22 +94,37 @@ const MonthlyBudget = () => {
   };
 
   const handleDelete = async (id: string) => {
-    try { await dispatch(deleteBudget(id) as any).unwrap(); dispatch(getAllBudget() as any); } 
-    catch (err) { console.error("Failed to delete budget", err); }
+    try {
+      await dispatch(deleteBudget(id) as any).unwrap();
+      dispatch(getAllBudget() as any);
+    } catch (err) {
+      console.error("Failed to delete budget", err);
+    }
   };
 
   return (
     <Grid container spacing={2} mt={2}>
       {/* Budget Form */}
-      <Grid size={{xs:12,md:6}}>
-        <Box sx={{ border: "2px solid #e2e8f0", p: 2, borderRadius: 3 }}>
-          <Typography sx={{ fontSize: "15px", fontWeight: 600 }}>Monthly Budget</Typography>
+      <Grid size={{ xs: 12, md: 6 }}>
+        <Box
+          sx={{
+            border: `2px solid ${theme.palette.divider}`,
+            p: 2,
+            borderRadius: 3,
+            bgcolor: theme.palette.background.paper,
+          }}
+        >
+          <Typography sx={{ fontSize: "15px", fontWeight: 600 }}>
+            Monthly Budget
+          </Typography>
 
           <Grid container spacing={2} alignItems="center" mt={1}>
-            <Grid  size={{xs:"auto"}}>
-              <CalendarMonthOutlinedIcon sx={{ color: "#14ab78", fontSize: 40 }} />
+            <Grid size={{ xs: "auto" }}>
+              <CalendarMonthOutlinedIcon
+                sx={{ color: theme.palette.primary.main, fontSize: 40 }}
+              />
             </Grid>
-            <Grid  size={{xs:6,sm:4}}>
+            <Grid size={{ xs: 6, sm: 4 }}>
               <Select
                 name="month"
                 value={formData.month}
@@ -86,14 +134,23 @@ const MonthlyBudget = () => {
                 sx={{
                   height: "50px",
                   "& .MuiOutlinedInput-notchedOutline": { borderRadius: 2 },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#14ab78", borderWidth: 2 },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: theme.palette.primary.main,
+                    borderWidth: 2,
+                  },
                 }}
               >
-                <MenuItem value="" disabled>Select Month</MenuItem>
-                {months.map(m => <MenuItem key={m} value={m}>{m}</MenuItem>)}
+                <MenuItem value="" disabled>
+                  Select Month
+                </MenuItem>
+                {months.map((m) => (
+                  <MenuItem key={m} value={m}>
+                    {m}
+                  </MenuItem>
+                ))}
               </Select>
             </Grid>
-            <Grid size={{xs:6,sm:3}}>
+            <Grid size={{ xs: 6, sm: 3 }}>
               <Select
                 name="year"
                 value={formData.year}
@@ -103,17 +160,26 @@ const MonthlyBudget = () => {
                 sx={{
                   height: "50px",
                   "& .MuiOutlinedInput-notchedOutline": { borderRadius: 2 },
-                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": { borderColor: "#14ab78", borderWidth: 2 },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: theme.palette.primary.main,
+                    borderWidth: 2,
+                  },
                 }}
               >
-                <MenuItem value="" disabled>Select Year</MenuItem>
-                {years.map(y => <MenuItem key={y} value={y}>{y}</MenuItem>)}
+                <MenuItem value="" disabled>
+                  Select Year
+                </MenuItem>
+                {years.map((y) => (
+                  <MenuItem key={y} value={y}>
+                    {y}
+                  </MenuItem>
+                ))}
               </Select>
             </Grid>
           </Grid>
 
           <Grid container spacing={2} mt={2} alignItems="center">
-            <Grid size={{xs:12,sm:7}}>
+            <Grid size={{ xs: 12, sm: 7 }}>
               <TextField
                 fullWidth
                 name="amount"
@@ -124,68 +190,164 @@ const MonthlyBudget = () => {
                 sx={{ height: "50px" }}
               />
             </Grid>
-            <Grid  size={{xs:12,sm:5}}>
+            <Grid size={{ xs: 12, sm: 5 }}>
               <Button
                 fullWidth
-                sx={{ backgroundColor: "#14ab78", color: "white", height:55,borderRadius:3,textTransform:'none',mt:1,fontSize:20}}
+                sx={{
+                  backgroundColor: theme.palette.primary.main,
+                  color: theme.palette.common.white,
+                  height: 55,
+                  borderRadius: 3,
+                  textTransform: "none",
+                  mt: 1,
+                  fontSize: 20,
+                  "&:hover": { backgroundColor: theme.palette.primary.dark },
+                }}
                 onClick={handleSave}
                 disabled={loading}
               >
                 {editBudgetId ? "Update" : "Save"}
               </Button>
-              {loading && <CircularProgress size={24} sx={{ position: "absolute", top: "50%", left: "50%", marginTop: "-12px", marginLeft: "-12px" }} />}
+              {loading && (
+                <CircularProgress
+                  size={24}
+                  sx={{
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    marginTop: "-12px",
+                    marginLeft: "-12px",
+                  }}
+                />
+              )}
             </Grid>
           </Grid>
 
           {/* Utilization & Chips */}
           <Box mt={2}>
-            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>Utilization</Typography>
+            <Typography sx={{ fontSize: 14, fontWeight: 500 }}>
+              Utilization
+            </Typography>
             <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-              <Box sx={{ flex: 1, height: 16, backgroundColor: "#e0e0e0", borderRadius: 3 }}>
-                <Box sx={{ width: "30%", height: "100%", backgroundColor: "#14ab78", borderRadius: 3 }} />
+              <Box
+                sx={{
+                  flex: 1,
+                  height: 16,
+                  backgroundColor: theme.palette.grey[300],
+                  borderRadius: 3,
+                }}
+              >
+                <Box
+                  sx={{
+                    width: "30%",
+                    height: "100%",
+                    backgroundColor: theme.palette.primary.main,
+                    borderRadius: 3,
+                  }}
+                />
               </Box>
-              <Typography sx={{ fontSize: 12, fontWeight: 500, minWidth: 35 }}>30%</Typography>
+              <Typography sx={{ fontSize: 12, fontWeight: 500, minWidth: 35 }}>
+                30%
+              </Typography>
             </Box>
           </Box>
           <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap", mt: 2 }}>
-            <Chip label={`Allocated: ₹${data?.data?.find((b: any) => b.month === formData.month && Number(b.year) === Number(formData.year))?.amount || 0}`} />
+            <Chip
+              label={`Allocated: ₹${
+                data?.data?.find(
+                  (b: any) =>
+                    b.month === formData.month &&
+                    Number(b.year) === Number(formData.year)
+                )?.amount || 0
+              }`}
+            />
             <Chip label="Spent: ₹400" />
             <Chip label="Avg/day: ₹50" />
           </Box>
-          {error && <Typography sx={{ color: "red", mt: 1 }}>{error}</Typography>}
+          {error && <Typography sx={{ color: theme.palette.error.main, mt: 1 }}>{error}</Typography>}
         </Box>
       </Grid>
 
       {/* All Budgets Table */}
-      <Grid size={{xs:12,md:6}}>
-        <Box sx={{ border: "2px solid #e2e8f0", borderRadius: 3, p: 2, maxHeight:286, overflowY: "auto" }}>
-          <Typography sx={{ fontSize: 15, fontWeight: 600, mb: 1 }}>All Budgets</Typography>
-          {loading ? <CircularProgress size={24} /> :
-            data?.data?.length ? (
-              <Table size="small">
-                <TableHead>
-                  <TableRow>
-                    <TableCell sx={{ color: "gray" }}>Month</TableCell>
-                    <TableCell sx={{ color: "gray" }}>Year</TableCell>
-                    <TableCell sx={{ color: "gray" }}>Amount</TableCell>
-                    <TableCell sx={{ color: "gray", textAlign: "center" }}>Actions</TableCell>
+      <Grid size={{ xs: 12, md: 6 }}>
+        <Box
+          sx={{
+            border: `2px solid ${theme.palette.divider}`,
+            borderRadius: 3,
+            p: 2,
+            maxHeight: 298,
+            overflowY: "auto",
+            bgcolor: theme.palette.background.paper,
+          }}
+        >
+          <Typography sx={{ fontSize: 15, fontWeight: 600, mb: 1 }}>
+            All Budgets
+          </Typography>
+          {loading ? (
+            <CircularProgress size={24} />
+          ) : data?.data?.length ? (
+            <Table size="small">
+              <TableHead>
+                <TableRow>
+                  <TableCell sx={{ color: theme.palette.text.secondary }}>
+                    Month
+                  </TableCell>
+                  <TableCell sx={{ color: theme.palette.text.secondary }}>
+                    Year
+                  </TableCell>
+                  <TableCell sx={{ color: theme.palette.text.secondary }}>
+                    Amount
+                  </TableCell>
+                  <TableCell
+                    sx={{ color: theme.palette.text.secondary, textAlign: "center" }}
+                  >
+                    Actions
+                  </TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {data.data.map((budget: any) => (
+                  <TableRow key={budget._id}>
+                    <TableCell>{budget.month}</TableCell>
+                    <TableCell>{budget.year}</TableCell>
+                    <TableCell>₹ {budget.amount}</TableCell>
+                    <TableCell
+                      sx={{
+                        display: "flex",
+                        justifyContent: "center",
+                        gap: 1,
+                      }}
+                    >
+                      <Button
+                        sx={{
+                          color: theme.palette.text.secondary,
+                          border: `1px solid ${theme.palette.divider}`,
+                          textTransform: "none",
+                          height: 28,
+                        }}
+                        onClick={() => handleEdit(budget)}
+                      >
+                        <EditOutlinedIcon fontSize="small" /> Edit
+                      </Button>
+                      <Button
+                        sx={{
+                          color: theme.palette.error.main,
+                          border: `1px solid ${theme.palette.divider}`,
+                          textTransform: "none",
+                          height: 28,
+                        }}
+                        onClick={() => handleDelete(budget._id)}
+                      >
+                        <DeleteOutlinedIcon fontSize="small" /> Delete
+                      </Button>
+                    </TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {data.data.map((budget: any) => (
-                    <TableRow key={budget._id}>
-                      <TableCell>{budget.month}</TableCell>
-                      <TableCell>{budget.year}</TableCell>
-                      <TableCell>₹ {budget.amount}</TableCell>
-                      <TableCell sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
-                        <Button sx={{ color: "gray", border: "1px solid #64748b", textTransform: "none", height: 28 }} onClick={() => handleEdit(budget)}><EditOutlinedIcon fontSize="small" /> Edit</Button>
-                        <Button sx={{ color: "red", border: "1px solid #64748b", textTransform: "none", height: 28 }} onClick={() => handleDelete(budget._id)}><DeleteOutlinedIcon fontSize="small" /> Delete</Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            ) : <Typography>No budgets found</Typography>}
+                ))}
+              </TableBody>
+            </Table>
+          ) : (
+            <Typography>No budgets found</Typography>
+          )}
         </Box>
       </Grid>
     </Grid>

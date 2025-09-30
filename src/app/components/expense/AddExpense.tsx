@@ -9,6 +9,8 @@ import {
   Paper,
   CircularProgress,
   Grid,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { LocalizationProvider, DatePicker } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -31,6 +33,7 @@ import {
 import { RootState } from "@/app/store/store";
 import ViewPage from "./ViewPage";
 import CommonTitle from "@/app/common/CommonTitle";
+import socket from "@/app/utils/socket";
 
 interface Expense {
   date: string;
@@ -90,6 +93,10 @@ const Page = () => {
     category: "",
     description: "",
   });
+  const [toast, setToast] = useState<{ open: boolean; message: string }>({
+    open: false,
+    message: "",
+  });
 
   const handleOpenDialog = () => setIsDialogOpen(true);
   const handleCloseDialog = () => setIsDialogOpen(false);
@@ -98,14 +105,20 @@ const Page = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
-const filteredData = data?.filter((expense) => {
-  const text = searchText.toLowerCase();
-  return (
-    String(expense.merchant || "").toLowerCase().includes(text) ||
-    String(expense.description || "").toLowerCase().includes(text) ||
-    String(expense.category || "").toLowerCase().includes(text)
-  );
-});
+  const filteredData = data?.filter((expense) => {
+    const text = searchText.toLowerCase();
+    return (
+      String(expense.merchant || "")
+        .toLowerCase()
+        .includes(text) ||
+      String(expense.description || "")
+        .toLowerCase()
+        .includes(text) ||
+      String(expense.category || "")
+        .toLowerCase()
+        .includes(text)
+    );
+  });
 
   const handleSubmit = () => {
     dispatch(createNewExpense(formData) as any)
@@ -130,6 +143,38 @@ const filteredData = data?.filter((expense) => {
     dispatch(getAllExpense({ pageNo: 0, pageSize: 10 }) as any);
   }, [dispatch]);
 
+  //Socket listener
+  useEffect(() => {
+    console.log("Connecting socket...");
+    socket.connect();
+
+    socket.on("connect", () => {
+      console.log("Connected to socket:", socket.id);
+    });
+
+    socket.on("notification", (data) => {
+      console.log("Notification received:", data);
+      setToast({ open: true, message: data.message });
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from socket");
+    });
+
+    socket.on("connect_error", (err) => {
+      console.error("Socket connect error:", err.message);
+    });
+
+    return () => {
+      console.log("Removing socket listeners & disconnecting");
+      socket.off("notification");
+      socket.off("connect");
+      socket.off("disconnect");
+      socket.off("connect_error");
+      socket.disconnect();
+    };
+  }, []);
+
   if (selectedExpenseId) {
     return (
       <ViewPage
@@ -145,7 +190,10 @@ const filteredData = data?.filter((expense) => {
         {/* Header */}
         <Grid container justifyContent="space-between" alignItems="center">
           <Grid size={{ xs: 12, sm: 6 }}>
-            <CommonTitle title="Expenses" subTitle=" Add, view, and manage your expenses."/>
+            <CommonTitle
+              title="Expenses"
+              subTitle=" Add, view, and manage your expenses."
+            />
           </Grid>
           <Grid size={{ xs: 12, sm: "auto" }} sx={{ mt: { xs: 2, sm: 0 } }}>
             <Button
@@ -166,7 +214,20 @@ const filteredData = data?.filter((expense) => {
             </Button>
           </Grid>
         </Grid>
-
+        <Snackbar
+          open={toast.open}
+          autoHideDuration={3000}
+          onClose={() => setToast({ ...toast, open: false })}
+          anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+        >
+          <Alert
+            severity="info"
+            sx={{ width: "100%" }}
+            onClose={() => setToast({ ...toast, open: false })}
+          >
+            {toast.message}
+          </Alert>
+        </Snackbar>
         <CommonDialog
           open={isDialogOpen}
           onClose={handleCloseDialog}

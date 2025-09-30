@@ -1,5 +1,7 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
-import { Avatar, Box, Typography, Switch } from "@mui/material";
+import { Avatar, Box, Typography } from "@mui/material";
 import { useRouter, usePathname } from "next/navigation";
 import { useAppSelector } from "@/app/hooks/redux";
 import {
@@ -125,23 +127,55 @@ const Sidebar = () => {
         </Typography>
       </Box>
 
-      {/* Theme Toggle */}
-      <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mb: 1, gap: 1 }}>
-        <LightModeOutlined />
-        <Switch
-          checked={darkMode}
-          onChange={toggleTheme}
-          sx={{
-            "& .MuiSwitch-switchBase.Mui-checked": {
-              color: "#14ab78",
-              "&:hover": { backgroundColor: "rgba(20,171,120,0.08)" },
-            },
-            "& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track": { backgroundColor: "#14ab78" },
-            "& .MuiSwitch-track": { backgroundColor: "#ccc" },
-          }}
-        />
-        <NightlightOutlined />
-      </Box>
+     {/* Modern Theme Toggle */}
+<Box sx={{ display: "flex", alignItems: "center", justifyContent: "center", mb: 2 }}>
+  <Box
+    onClick={toggleTheme}
+    sx={{
+      width: 60,
+      height: 28,
+      borderRadius: 14,
+      backgroundColor: darkMode ? "#333" : "#ddd",
+      position: "relative",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "0 4px",
+      transition: "background-color 0.3s",
+    }}
+  >
+    {/* Sun Icon */}
+    <LightModeOutlined
+      sx={{
+        color: darkMode ? "#999" : "#fbbc04",
+        fontSize: 20,
+      }}
+    />
+    {/* Moon Icon */}
+    <NightlightOutlined
+      sx={{
+        color: darkMode ? "#14ab78" : "#999",
+        fontSize: 20,
+      }}
+    />
+    {/* Slider Circle */}
+    <Box
+      sx={{
+        width: 24,
+        height: 24,
+        borderRadius: "50%",
+        backgroundColor: "#fff",
+        position: "absolute",
+        top: "2px",
+        left: darkMode ? "calc(100% - 26px)" : "2px", // ensure it stays inside
+        transition: "left 0.3s",
+        boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+      }}
+    />
+  </Box>
+</Box>
+
 
       {/* Logout Button */}
       <Box
