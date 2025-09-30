@@ -5,8 +5,7 @@ import {
   deleteCategory,
   getAllCategory,
 } from "./category.thunk";
-import { AnyARecord } from "dns";
-import build from "next/dist/build";
+
 
 interface CategoryState {
   loading: boolean;

@@ -5,7 +5,7 @@ import { budgetService } from "@/app/lib/budget.management";
 export const createNewBudget = createAsyncThunk(
   "/newBudget",
   async (
-    payload: { month: String; year: String; amount: String },
+    payload: { month: string; year: string; amount: string },
     { rejectWithValue }
   ) => {
     try {

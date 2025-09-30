@@ -27,7 +27,7 @@ const totalSlice=createSlice({
             state.error=null;
         })
         .addCase(getCategoryTotal.fulfilled,(state,action)=>{
-            state.loading=false,
+            state.loading=false;
             state.data=action.payload;
         })
         .addCase(getCategoryTotal.rejected,(state,action)=>{

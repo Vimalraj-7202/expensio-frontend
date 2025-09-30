@@ -71,7 +71,7 @@ const Page = () => {
         {/* Upload Section */}
         <Box
           sx={{
-            border: `2px dashed ${theme.palette.divider}`, // ✅ adaptive
+            border: `2px dashed ${theme.palette.divider}`,
             borderRadius: "10px",
             height: "250px",
             flex: "1 1 40%",

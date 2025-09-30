@@ -25,7 +25,7 @@ const reportSlice=createSlice({
             state.error=null;
         })
         .addCase(getAllOverview.fulfilled,(state,action)=>{
-            state.loading=false,
+            state.loading=false;
             state.data=action.payload;
         })
         .addCase(getAllOverview.rejected,(state,action)=>{

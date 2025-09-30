@@ -369,7 +369,7 @@ const Page = () => {
         }}
       >
         <Typography fontWeight={700} variant="h6" mb={1} color="#111">
-          What You'll Get
+          What You will Get
         </Typography>
         <Chip
           label="🎉 No credit card needed"

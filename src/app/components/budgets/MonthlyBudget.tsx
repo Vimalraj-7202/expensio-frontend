@@ -66,7 +66,7 @@ const MonthlyBudget = () => {
     } else if (!editBudgetId) {
       setFormData({ month: currentMonth, year: String(currentYear), amount: "" });
     }
-  }, [data, editBudgetId]);
+  }, [data, editBudgetId,currentMonth,currentYear]);
 
   const handleChange = (e: any) => {
     const { name, value } = e.target;

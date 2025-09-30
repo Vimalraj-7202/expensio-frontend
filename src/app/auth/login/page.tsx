@@ -92,6 +92,7 @@ const AuthPage = () => {
           registerUser({ name, email, password, role })
         ).unwrap();
         showMessage("Registration successful", "success");
+        console.log(res,'res');
 
         //Redirect based on selected role after signup
         if (role === "guest") {
@@ -101,7 +102,7 @@ const AuthPage = () => {
         }
       }
     } catch (err: any) {
-      // console.error("Auth failed:", err);
+      console.error("Auth failed:", err);
       showMessage(
         isLogin ? "Login failed. Try again." : "Registration failed.",
         "error"

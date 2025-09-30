@@ -108,7 +108,7 @@ const OverView = () => {
   return (
     <Grid container spacing={2}>
       {overviewData.map((item, index) => (
-        <Grid size={{ md: 3, xs: 12, sm: 6, lg: 3 }}>
+        <Grid key={index} size={{ md: 3, xs: 12, sm: 6, lg: 3 }}>
           <Box
             key={index}
             sx={{

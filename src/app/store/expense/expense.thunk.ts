@@ -4,7 +4,7 @@ import {expenseService} from '@/app/lib/expense.management'
 //createExpense
 export const createNewExpense=createAsyncThunk(
     '/newExpense',
-    async(payload:{date:String,merchant:String,description:String,category:String,totalAmount:String},{rejectWithValue})=>{
+    async(payload:{date:string,merchant:string,description:string,category:string,totalAmount:string},{rejectWithValue})=>{
         try{
             const {data}=await expenseService.createExpense(payload);
             return data;

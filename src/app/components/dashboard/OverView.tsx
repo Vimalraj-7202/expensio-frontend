@@ -15,9 +15,9 @@ const Page = () => {
   const { data, loading, error } = useSelector(
     (state: RootState) => state.report
   );
-  const { name, role } = useSelector(
+  const { name} = useSelector(
     (state: RootState) =>
-      (state.auth.user as { name: string; role: string }) || {}
+      (state.auth.user as { name: string}) || {}
   );
   useEffect(() => {
     dispatch(getAllOverview() as any);

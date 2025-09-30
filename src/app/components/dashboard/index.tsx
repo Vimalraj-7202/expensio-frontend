@@ -1,7 +1,7 @@
 import React from 'react';
 import OverView from './OverView';
 import DetailedChart from './DetailedChart';
-import { Box, Grid } from '@mui/material';
+import { Box} from '@mui/material';
 import RecentExpense from './RecentExpense';
 // import UpcomingBills from './UpcomingBills';
 

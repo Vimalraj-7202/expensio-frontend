@@ -1,8 +1,9 @@
-'use client'
+"use client";
 import { RootState } from "@/app/store/store";
 import { Box, Button, TextField, Typography, useTheme } from "@mui/material";
 import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
+import Image from "next/image";
 
 const Index = () => {
   const theme = useTheme();
@@ -64,16 +65,17 @@ const Index = () => {
               justifyContent: "center",
               overflow: "hidden",
               cursor: "pointer",
-              position: "relative",
+              position: "relative", // needed for <Image fill />
               mb: 1,
             }}
             onClick={() => document.getElementById("imageUpload")?.click()}
           >
             {image ? (
-              <img
+              <Image
                 src={image}
                 alt="Profile"
-                style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                fill
+                style={{ objectFit: "cover" }}
               />
             ) : (
               <Typography
@@ -104,8 +106,20 @@ const Index = () => {
 
       {/* Two Fields in One Row */}
       <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row" }, gap: 2, mb: 3 }}>
-        <TextField fullWidth label="Name" value={name} onChange={(e) => setName(e.target.value)} sx={textFieldStyles} />
-        <TextField fullWidth label="Email" value={email} onChange={(e) => setEmail(e.target.value)} sx={textFieldStyles} />
+        <TextField
+          fullWidth
+          label="Name"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          sx={textFieldStyles}
+        />
+        <TextField
+          fullWidth
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          sx={textFieldStyles}
+        />
       </Box>
 
       {/* Buttons */}
@@ -138,7 +152,11 @@ const Index = () => {
       {/* Security Section */}
       <Box sx={{ border: `2px solid ${theme.palette.divider}`, borderRadius: 2, p: 3 }}>
         <Typography sx={{ fontSize: { xs: 15, sm: 17 }, mb: 1 }}>Security</Typography>
-        <Typography variant="body2" color="text.secondary" sx={{ mb: 2, fontSize: { xs: 12, sm: 14 } }}>
+        <Typography
+          variant="body2"
+          color="text.secondary"
+          sx={{ mb: 2, fontSize: { xs: 12, sm: 14 } }}
+        >
           Update your password to keep your account secure
         </Typography>
 
@@ -157,7 +175,11 @@ const Index = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           error={password.length > 0 && password.length < 8}
-          helperText={password.length > 0 && password.length < 8 ? "Password must be at least 8 characters" : ""}
+          helperText={
+            password.length > 0 && password.length < 8
+              ? "Password must be at least 8 characters"
+              : ""
+          }
           sx={{ mb: 2, ...textFieldStyles }}
         />
         <TextField
